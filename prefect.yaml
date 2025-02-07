@@ -1,0 +1,74 @@
+name: hello-world
+prefect-version: 3.1.15
+
+definitions:
+  tags: &common_tags
+    - "prefect-hello-world"
+    - "heartbeats-enabled"
+  work_pool: &common_work_pool
+    name: "local-work-pool"
+    work_queue_name: "default"
+
+#                          ----------------------
+#                        /                        \
+# Multiple Flows. hello-world -> hello-world2 -> hello-world3
+# All Flows, except the first, is triggered by events. The first Flow should be triggered manually.
+deployments:
+- name: "hello-world"
+  entrypoint: "src/prefect_hello_world/hello_world.py:hello_world"
+  version: "{{ $GIT_COMMIT }}"
+  work_pool: *common_work_pool
+  tags: *common_tags
+  schedule: null
+  description: "Hello world style test deployment"
+- name: "hello-world2"
+  entrypoint: "src/prefect_hello_world/hello_world.py:hello_world"
+  version: "{{ $GIT_COMMIT }}"
+  work_pool: *common_work_pool
+  tags: *common_tags
+  schedule: null
+  description: "Hello world style test deployment"
+  triggers:
+    - type: event
+      enabled: true
+      match:
+        prefect.resource.id: "acme.hello-world.first"
+      expect:
+        - "acme.hello-world.test-event"
+      parameters:
+        resource_id: "second" # NOTE: hardcoded
+        complete_event: "{{ event }}"
+        trigger_occurred: "{{ event.occurred }}"
+        trigger_resource_json: "{{ event.resource.root }}"
+        payload_dict_str: "{{ event.payload }}"
+- name: "hello-world3"
+  entrypoint: "src/prefect_hello_world/hello_world.py:hello_world"
+  version: "{{ $GIT_COMMIT }}"
+  work_pool: *common_work_pool
+  tags: *common_tags
+  schedule: null
+  description: "Hello world style test deployment"
+  triggers:
+    - type: compound # Composition of multiple events
+      enabled: true
+      require: "all" # Requires all events before triggering Deployment
+      within: 3600 # Max 1h accepted between both events for triggering the Deployment
+      parameters:
+        resource_id: "third"
+        complete_event: "foo"
+        trigger_occurred: "20240923233" #event.occurred }}"
+        trigger_resource_json: "{{ event }}" # event.resource.root }}"
+        payload_dict_str: "{{ event }}" #event.payload }}"
+      triggers:
+        - type: event
+          enabled: true
+          match:
+            prefect.resource.id: "acme.hello-world.first"
+          expect:
+            - "acme.hello-world.test-event"
+        - type: event
+          enabled: true
+          match:
+            prefect.resource.id: "acme.hello-world.second"
+          expect:
+            - "acme.hello-world.test-event"
