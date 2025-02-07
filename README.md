@@ -1,4 +1,6 @@
 ## Setup
+First install [hatch](https://hatch.pypa.io/latest/install/)
+
 Register Deployments and start a local Prefect server and work-pool by doing: 
 * `hatch shell dev`
 * `prefect server start &`
