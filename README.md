@@ -13,3 +13,6 @@ Register Deployments and start a local Prefect server and work-pool by doing:
 Trigger a run of the `hello-world`-deployment. This will in turn trigger multiple other runs of the `hello-world*` deployments. The trigger of hello-world3 will fail. Look for the:
 `prefect.server.utilities.messaging.memory - Message failed after 4 retries and will be moved to the dead letter queue`
 in the logs from the worker.
+
+## Misc
+For resetting/clearing the Prefect database do: `prefect server database reset -y`

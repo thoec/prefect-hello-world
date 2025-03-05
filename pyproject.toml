@@ -18,17 +18,12 @@ classifiers = [
 ]
 
 dependencies = [
-    "dbt-core",
-    "dbt-clickhouse",
     "deepdiff>=7.0.1",
     "flake8>=6.1.0",
     "loguru>=0.7.2",
     "pandas>=2.1.4",
     "polars-lts-cpu>=1.2.1",
-    "prefect==3.1.15",
-    "prefect-dbt",
-    "prefect-docker>=0.6.0",
-    "prefect-kubernetes>=0.5.0",
+    "prefect==3.2.9",
     "prometheus-client>=0.20.0",
     "pyarrow>=15.0.0",
     "pydantic>=2.5.2",
