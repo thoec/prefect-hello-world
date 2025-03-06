@@ -8,7 +8,6 @@ definitions:
   work_pool: &common_work_pool
     name: "local-work-pool"
     work_queue_name: "default"
-
   flows:
     hello_world_flow: &hello_world_flow
       entrypoint: "src/prefect_hello_world/hello_world.py:hello_world"
