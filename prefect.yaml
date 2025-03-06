@@ -1,5 +1,5 @@
 name: hello-world
-prefect-version: 3.1.15
+prefect-version: 3.2.10
 
 definitions:
   tags: &common_tags
